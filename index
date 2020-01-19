@@ -1,0 +1,27 @@
+#!/usr/bin/php
+<?php
+
+require __DIR__.'/vendor/autoload.php';
+
+use Parser\App;
+
+$app = new App();
+
+if (isset($argv[1])) {
+    $app->registerCommand($argv[1], function (array $argv) use ($app) {
+        $name = isset($argv[2]) ? $argv[2] : " ";
+        if ($argv[1] == 'parse') {
+            $app->getPrinter()->pageToString($name);
+        } elseif ($argv[1] == 'report') {
+            $app->getPrinter()->showInfo($name);
+        } else {
+            $app->helpInfo();
+        }
+    });
+}
+
+$app->registerCommand('help', function (array $argv) use ($app) {
+    $app->helpInfo();
+});
+
+$app->runCommand($argv);
